@@ -25,14 +25,10 @@ def filter_lowpass_folder(input_folder, output_folder, cutoff=600, order=6):
             try:
                 fs, data = wav.read(input_path)
 
-                # Convert to mono if stereo
-                if len(data.shape) == 2:
+                if len(data.shape) == 2:  # stereo → mono
                     data = np.mean(data, axis=1)
 
-                # Apply low-pass filter
                 filtered = apply_lowpass_filter(data, fs, cutoff=cutoff, order=order)
-
-                # Normalize and convert to int16 for saving
                 filtered = filtered / np.max(np.abs(filtered))
                 filtered_int16 = np.int16(filtered * 32767)
 
@@ -45,7 +41,12 @@ def filter_lowpass_folder(input_folder, output_folder, cutoff=600, order=6):
 
     print(f"\n✅ Done. Filtered {processed} file(s) into: {output_folder}")
 
-AS = "Khan Dataset/AS"
-AS_filtered = "Khan Dataset filtered/AS_filtered"
+# Input folders
+base = "Khan Dataset"
+subfolders = ["AS", "MR", "MS", "MVP", "N"]
 
-filter_lowpass_folder(AS, AS_filtered, cutoff=600, order=6)
+# Step 1: Filter audio files
+for name in subfolders:
+    input_path = os.path.join(base, name)
+    filtered_path = f"Khan Dataset filtered/{name}_filtered"
+    filter_lowpass_folder(input_path, filtered_path, cutoff=600, order=6)
