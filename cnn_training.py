@@ -18,6 +18,7 @@ transform = transforms.Compose([
 ])
 # loading the dataset using ImageFolder
 full_dataset = datasets.ImageFolder(root=dataset_path, transform=transform)
+print(full_dataset.class_to_idx)
 
 # Splitting the dataset into training and validation sets (80/20)
 # Using shuffled split
